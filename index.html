@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>수업 서랍 | 윤두수 선생님의 수업자료</title>
+<meta name="description" content="특수교육 현장에서 직접 만든 수업 앱, 영상, 학습자료를 모아 둔 곳입니다.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF2EF; --panel: #FFFFFF; --ink: #1F2A44; --muted: #5B6478; --line: #D5DCD7;
+    --app: #2F6FA3; --video: #C2456B; --doc: #3E8E5E; --talk: #7A5BA6; --new: #F2C14E;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141A24; --panel: #1C2432; --ink: #E8ECF3; --muted: #A3ACBD; --line: #2C3647;
+      --app: #6FA8DA; --video: #E87B9C; --doc: #6CC08E; --talk: #AE90D8; --new: #E9B83A;
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+    font-size: 16px; line-height: 1.65;
+    padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px);
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--app); outline-offset: 2px; border-radius: 4px; }
+
+  header { padding: 64px 0 36px; }
+  h1 {
+    font-family: "Gowun Batang", serif; font-weight: 700;
+    font-size: clamp(2.6rem, 8vw, 4.2rem); line-height: 1.1; margin: 0 0 14px; letter-spacing: -0.02em;
+  }
+  .intro { color: var(--muted); max-width: 34em; margin: 0; font-size: 1.05rem; }
+  .who { margin-top: 18px; font-size: 0.92rem; color: var(--muted); }
+
+  .search { display: flex; gap: 10px; margin: 0 0 28px; }
+  .search input {
+    flex: 1; font: inherit; color: var(--ink); background: var(--panel);
+    border: 1.5px solid var(--line); border-radius: 10px; padding: 12px 14px;
+  }
+  .search input::placeholder { color: var(--muted); }
+
+  /* 서랍 손잡이처럼 생긴 분류 탭 */
+  .tabs { display: flex; gap: 6px; overflow-x: auto; padding: 0 2px; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab {
+    flex: none; font: inherit; font-weight: 500; color: var(--muted); cursor: pointer;
+    background: transparent; border: 1.5px solid var(--line); border-bottom: none;
+    border-radius: 12px 12px 0 0; padding: 10px 18px 9px; position: relative; top: 1.5px;
+    border-top: 5px solid var(--c, var(--ink));
+  }
+  .tab .n { font-size: 0.82rem; margin-left: 4px; opacity: 0.75; }
+  .tab[aria-selected="true"] { background: var(--panel); color: var(--ink); z-index: 1; }
+  .tab:not([aria-selected="true"]):hover { color: var(--ink); }
+
+  .drawer {
+    background: var(--panel); border: 1.5px solid var(--line);
+    border-radius: 0 14px 14px 14px; padding: 6px 0; min-height: 200px;
+  }
+  .item {
+    display: grid; grid-template-columns: 6px 1fr auto; gap: 18px; align-items: center;
+    padding: 20px 24px 20px 0; border-bottom: 1px solid var(--line);
+  }
+  .item:last-child { border-bottom: none; }
+  .bar { align-self: stretch; background: var(--c); border-radius: 0 4px 4px 0; }
+  .title { font-weight: 600; font-size: 1.12rem; margin: 0 0 4px; line-height: 1.4; }
+  .new {
+    display: inline-block; font-size: 0.75rem; font-weight: 600; color: #3A2A00;
+    background: var(--new); border-radius: 6px; padding: 1px 7px; margin-left: 6px; vertical-align: 2px;
+  }
+  .desc { margin: 0 0 8px; color: var(--muted); max-width: 40em; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.85rem; }
+  .meta span { border: 1px solid var(--line); border-radius: 999px; padding: 1px 10px; color: var(--muted); }
+  .meta .cat { color: var(--c); border-color: var(--c); font-weight: 500; }
+  .go {
+    font: inherit; font-weight: 600; font-size: 0.95rem; text-decoration: none; white-space: nowrap;
+    color: #fff; background: var(--c); border-radius: 10px; padding: 10px 16px;
+  }
+  @media (prefers-color-scheme: dark) { .go { color: #10151E; } }
+  .go:hover { filter: brightness(1.08); }
+  .go.off { background: transparent; color: var(--muted); border: 1.5px dashed var(--line); cursor: default; }
+
+  .empty { padding: 48px 24px; text-align: center; color: var(--muted); }
+  .empty button {
+    font: inherit; margin-top: 12px; cursor: pointer; color: var(--ink);
+    background: transparent; border: 1.5px solid var(--line); border-radius: 10px; padding: 8px 16px;
+  }
+
+  footer { padding: 40px 0 56px; font-size: 0.88rem; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    header { padding: 44px 0 28px; }
+    .item { grid-template-columns: 6px 1fr; padding-right: 18px; }
+    .go { grid-column: 2; justify-self: start; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>수업 서랍</h1>
+    <p class="intro">교실에서 직접 만들어 써 본 수업 앱, 마음챙김 영상, 학습자료를 모아 둡니다. 필요한 선생님 누구나 가져가 쓰세요.</p>
+    <p class="who">윤두수 · 인천예림학교 진로와 직업 교사</p>
+  </header>
+
+  <div class="search">
+    <label for="q" class="sr" style="position:absolute;left:-9999px">자료 검색</label>
+    <input id="q" type="search" placeholder="제목, 교과, 내용으로 찾기 (예: 감정, 직업예절)">
+  </div>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <main class="drawer" id="list" role="tabpanel"></main>
+
+  <footer>
+    학생 얼굴, 이름 등 개인정보가 담긴 자료는 올리지 않습니다. 자료는 수업 목적으로 자유롭게 쓰되, 출처를 밝혀 주세요.
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   자료 추가하는 곳
+   아래 { ... } 묶음 하나가 자료 하나입니다.
+   새 자료는 묶음을 하나 복사해서 내용만 바꾸면 돼요.
+   - 분류: 앱 / 영상 / 학습자료 / 연수자료 중 하나
+   - 날짜: 2026-11-06 형식 (최근 30일 안이면 '새 자료' 표시)
+   - 링크: 앱 주소, 유튜브 주소, 또는 files/파일이름.pdf
+           (아직 없으면 '' 로 비워 두면 '링크 준비 중'으로 보여요)
+   ============================================================ */
+const 자료 = [
+  {
+    분류: "앱", 제목: "감정 출석부",
+    설명: "수업 시작과 끝에 '처음 마음'과 '끝 마음'을 골라 기록하는 웹앱입니다. 여러 반을 나눠서 쓸 수 있어요.",
+    교과: "사회정서학습", 대상: "중·고등", 날짜: "2026-10-31", 링크: ""
+  },
+  {
+    분류: "앱", 제목: "직업예절 지키기",
+    설명: "일터에서 필요한 인사, 약속 지키기 같은 예절을 상황 카드로 연습하는 활동 앱입니다.",
+    교과: "진로와 직업", 대상: "고등", 날짜: "2026-10-16", 링크: ""
+  },
+  {
+    분류: "앱", 제목: "협동 게임 갈등 해결하기",
+    설명: "협동 게임 중 생긴 갈등 상황을 보고 해결 방법과 화해의 말을 골라 보는 활동 앱입니다.",
+    교과: "체육", 대상: "고등", 날짜: "2026-11-02", 링크: ""
+  },
+  {
+    분류: "영상", 제목: "마음 쉼표: 숨 고르기",
+    설명: "수업 도입에 쓰는 3분 길이의 마음챙김 영상입니다. Vrew로 만들었어요.",
+    교과: "사회정서학습", 대상: "전 학년", 날짜: "2026-10-31", 링크: ""
+  },
+  {
+    분류: "학습자료", 제목: "사회정서학습 수업 흐름표",
+    설명: "고등학교 기본교육과정에서 운영한 사회정서학습 차시별 흐름을 정리한 자료입니다.",
+    교과: "사회정서학습", 대상: "고등", 날짜: "2026-10-30", 링크: ""
+  }
+];
+
+/* 분류별 색과 버튼 문구 (바꾸고 싶을 때만 수정) */
+const 분류설정 = {
+  "앱":      { 색: "var(--app)",   버튼: "앱 열기" },
+  "영상":    { 색: "var(--video)", 버튼: "영상 보기" },
+  "학습자료": { 색: "var(--doc)",   버튼: "내려받기" },
+  "연수자료": { 색: "var(--talk)",  버튼: "자료 보기" }
+};
+
+/* ---------- 아래부터는 화면을 그리는 코드예요 ---------- */
+let 현재분류 = "전체";
+const $tabs = document.getElementById("tabs");
+const $list = document.getElementById("list");
+const $q = document.getElementById("q");
+
+function esc(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+}
+function 새자료인가(d) {
+  const t = new Date(d); if (isNaN(t)) return false;
+  return (Date.now() - t.getTime()) / 86400000 <= 30;
+}
+function 날짜표시(d) { return String(d).replaceAll("-", ".") + "."; }
+
+function drawTabs() {
+  const names = ["전체", ...Object.keys(분류설정)];
+  $tabs.innerHTML = names.map(n => {
+    const count = n === "전체" ? 자료.length : 자료.filter(x => x.분류 === n).length;
+    const c = n === "전체" ? "var(--ink)" : 분류설정[n].색;
+    return `<button class="tab" role="tab" aria-selected="${n === 현재분류}" style="--c:${c}" data-cat="${esc(n)}">${esc(n)}<span class="n">${count}</span></button>`;
+  }).join("");
+}
+
+function drawList() {
+  const q = $q.value.trim().toLowerCase();
+  const rows = 자료
+    .filter(x => 현재분류 === "전체" || x.분류 === 현재분류)
+    .filter(x => !q || [x.제목, x.설명, x.교과, x.대상, x.분류].join(" ").toLowerCase().includes(q))
+    .sort((a, b) => String(b.날짜).localeCompare(String(a.날짜)));
+
+  if (!rows.length) {
+    $list.innerHTML = `<div class="empty">조건에 맞는 자료가 없어요. 검색어를 바꾸거나 다른 서랍을 열어 보세요.<br>${q ? '<button id="clear">검색어 지우기</button>' : ""}</div>`;
+    const b = document.getElementById("clear");
+    if (b) b.onclick = () => { $q.value = ""; drawList(); $q.focus(); };
+    return;
+  }
+
+  $list.innerHTML = rows.map(x => {
+    const set = 분류설정[x.분류] || { 색: "var(--ink)", 버튼: "열기" };
+    const btn = x.링크
+      ? `<a class="go" href="${esc(x.링크)}" target="_blank" rel="noopener">${set.버튼}</a>`
+      : `<span class="go off">링크 준비 중</span>`;
+    return `<article class="item" style="--c:${set.색}">
+      <div class="bar"></div>
+      <div>
+        <h2 class="title">${esc(x.제목)}${새자료인가(x.날짜) ? '<span class="new">새 자료</span>' : ""}</h2>
+        <p class="desc">${esc(x.설명)}</p>
+        <div class="meta">
+          <span class="cat">${esc(x.분류)}</span>
+          ${x.교과 ? `<span>${esc(x.교과)}</span>` : ""}
+          ${x.대상 ? `<span>${esc(x.대상)}</span>` : ""}
+          <span>${날짜표시(x.날짜)}</span>
+        </div>
+      </div>
+      ${btn}
+    </article>`;
+  }).join("");
+}
+
+$tabs.addEventListener("click", e => {
+  const t = e.target.closest(".tab"); if (!t) return;
+  현재분류 = t.dataset.cat; drawTabs(); drawList();
+});
+$q.addEventListener("input", drawList);
+drawTabs(); drawList();
+</script>
+</body>
+</html>
