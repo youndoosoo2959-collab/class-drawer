@@ -72,10 +72,6 @@
   .item:last-child { border-bottom: none; }
   .bar { align-self: stretch; background: var(--c); border-radius: 0 4px 4px 0; }
   .title { font-weight: 600; font-size: 1.12rem; margin: 0 0 4px; line-height: 1.4; }
-  .new {
-    display: inline-block; font-size: 0.75rem; font-weight: 600; color: #3A2A00;
-    background: var(--new); border-radius: 6px; padding: 1px 7px; margin-left: 6px; vertical-align: 2px;
-  }
   .desc { margin: 0 0 8px; color: var(--muted); max-width: 40em; }
   .meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 0.85rem; }
   .meta span { border: 1px solid var(--line); border-radius: 999px; padding: 1px 10px; color: var(--muted); }
@@ -130,7 +126,7 @@
    아래 { ... } 묶음 하나가 자료 하나입니다.
    새 자료는 묶음을 하나 복사해서 내용만 바꾸면 돼요.
    - 분류: 앱 / 영상 / 학습자료 / 연수자료 중 하나
-   - 날짜: 2026-11-06 형식 (최근 30일 안이면 '새 자료' 표시)
+   - 순서: 여기 위에 적은 자료가 사이트에서도 위에 나와요
    - 링크: 앱 주소, 유튜브 주소, 또는 files/파일이름.pdf
            (아직 없으면 '' 로 비워 두면 '링크 준비 중'으로 보여요)
    ============================================================ */
@@ -138,27 +134,27 @@ const 자료 = [
   {
     분류: "앱", 제목: "감정 출석부",
     설명: "수업 시작과 끝에 '처음 마음'과 '끝 마음'을 골라 기록하는 웹앱입니다. 여러 반을 나눠서 쓸 수 있어요.",
-    교과: "사회정서학습", 대상: "중·고등", 날짜: "2026-10-31", 링크: ""
+    교과: "사회정서학습", 대상: "중·고등", 링크: ""
   },
   {
     분류: "앱", 제목: "직업예절 지키기",
     설명: "일터에서 필요한 인사, 약속 지키기 같은 예절을 상황 카드로 연습하는 활동 앱입니다.",
-    교과: "진로와 직업", 대상: "고등", 날짜: "2026-10-16", 링크: ""
+    교과: "진로와 직업", 대상: "고등", 링크: ""
   },
   {
     분류: "앱", 제목: "협동 게임 갈등 해결하기",
     설명: "협동 게임 중 생긴 갈등 상황을 보고 해결 방법과 화해의 말을 골라 보는 활동 앱입니다.",
-    교과: "체육", 대상: "고등", 날짜: "2026-11-02", 링크: ""
+    교과: "체육", 대상: "고등", 링크: ""
   },
   {
     분류: "영상", 제목: "마음 쉼표: 숨 고르기",
     설명: "수업 도입에 쓰는 3분 길이의 마음챙김 영상입니다. Vrew로 만들었어요.",
-    교과: "사회정서학습", 대상: "전 학년", 날짜: "2026-10-31", 링크: ""
+    교과: "사회정서학습", 대상: "전 학년", 링크: ""
   },
   {
     분류: "학습자료", 제목: "사회정서학습 수업 흐름표",
     설명: "고등학교 기본교육과정에서 운영한 사회정서학습 차시별 흐름을 정리한 자료입니다.",
-    교과: "사회정서학습", 대상: "고등", 날짜: "2026-10-30", 링크: ""
+    교과: "사회정서학습", 대상: "고등", 링크: ""
   }
 ];
 
@@ -179,11 +175,6 @@ const $q = document.getElementById("q");
 function esc(s) {
   return String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
 }
-function 새자료인가(d) {
-  const t = new Date(d); if (isNaN(t)) return false;
-  return (Date.now() - t.getTime()) / 86400000 <= 30;
-}
-function 날짜표시(d) { return String(d).replaceAll("-", ".") + "."; }
 
 function drawTabs() {
   const names = ["전체", ...Object.keys(분류설정)];
@@ -198,8 +189,7 @@ function drawList() {
   const q = $q.value.trim().toLowerCase();
   const rows = 자료
     .filter(x => 현재분류 === "전체" || x.분류 === 현재분류)
-    .filter(x => !q || [x.제목, x.설명, x.교과, x.대상, x.분류].join(" ").toLowerCase().includes(q))
-    .sort((a, b) => String(b.날짜).localeCompare(String(a.날짜)));
+    .filter(x => !q || [x.제목, x.설명, x.교과, x.대상, x.분류].join(" ").toLowerCase().includes(q));
 
   if (!rows.length) {
     $list.innerHTML = `<div class="empty">조건에 맞는 자료가 없어요. 검색어를 바꾸거나 다른 서랍을 열어 보세요.<br>${q ? '<button id="clear">검색어 지우기</button>' : ""}</div>`;
@@ -216,13 +206,12 @@ function drawList() {
     return `<article class="item" style="--c:${set.색}">
       <div class="bar"></div>
       <div>
-        <h2 class="title">${esc(x.제목)}${새자료인가(x.날짜) ? '<span class="new">새 자료</span>' : ""}</h2>
+        <h2 class="title">${esc(x.제목)}</h2>
         <p class="desc">${esc(x.설명)}</p>
         <div class="meta">
           <span class="cat">${esc(x.분류)}</span>
           ${x.교과 ? `<span>${esc(x.교과)}</span>` : ""}
           ${x.대상 ? `<span>${esc(x.대상)}</span>` : ""}
-          <span>${날짜표시(x.날짜)}</span>
         </div>
       </div>
       ${btn}
