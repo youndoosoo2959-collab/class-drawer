@@ -11,13 +11,13 @@
 <style>
   :root {
     --bg: #EEF2EF; --panel: #FFFFFF; --ink: #1F2A44; --muted: #5B6478; --line: #D5DCD7;
-    --app: #2F6FA3; --video: #C2456B; --doc: #3E8E5E; --talk: #7A5BA6; --new: #F2C14E;
+    --app: #2F6FA3; --video: #C2456B; --doc: #3E8E5E; --talk: #7A5BA6; --guide: #A8681A; --new: #F2C14E;
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #141A24; --panel: #1C2432; --ink: #E8ECF3; --muted: #A3ACBD; --line: #2C3647;
-      --app: #6FA8DA; --video: #E87B9C; --doc: #6CC08E; --talk: #AE90D8; --new: #E9B83A;
+      --app: #6FA8DA; --video: #E87B9C; --doc: #6CC08E; --talk: #AE90D8; --guide: #E0A85A; --new: #E9B83A;
       color-scheme: dark;
     }
   }
@@ -104,7 +104,7 @@
   <header>
     <h1>수업 서랍</h1>
     <p class="intro">특수교육 현장에서 직접 만들고 수업에 써 본 앱, 영상, 학습자료를 특수교사 선생님들과 나눕니다. 필요한 자료를 자유롭게 가져가 수업에 활용하세요.</p>
-    <p class="who">윤두수 · 인천예림학교 진로와 직업 교사</p>
+    <p class="who">윤두수 · 인천예림학교 특수교사</p>
   </header>
 
   <div class="search">
@@ -125,7 +125,7 @@
    자료 추가하는 곳
    아래 { ... } 묶음 하나가 자료 하나입니다.
    새 자료는 묶음을 하나 복사해서 내용만 바꾸면 돼요.
-   - 분류: 앱 / 영상 / 학습자료 / 연수자료 중 하나
+   - 분류: 앱 / 영상 / 학습자료 / 활용자료 / 연수자료 중 하나
    - 순서: 여기 위에 적은 자료가 사이트에서도 위에 나와요
    - 링크: 앱 주소, 유튜브 주소, 또는 files/파일이름.pdf
            (아직 없으면 '' 로 비워 두면 '링크 준비 중'으로 보여요)
@@ -135,6 +135,11 @@ const 자료 = [
     분류: "앱", 제목: "감정 출석부",
     설명: "수업 시작과 끝에 '처음 마음'과 '끝 마음'을 골라 기록하는 웹앱입니다. 여러 반을 나눠서 쓸 수 있어요.",
     교과: "사회정서학습", 대상: "중·고등", 링크: "https://claude.ai/artifact/Bjs7LeCgV3DpBZYcqvUq9x"
+  },
+  {
+    분류: "활용자료", 제목: "감정 출석부 사용 설명서",
+    설명: "감정 출석부 시작하기, 반 만들기와 학생 설정, 수업에서 쓰는 순서, 기록 보기, 개인정보 지키기와 자주 묻는 질문까지 정리한 5쪽 설명서입니다.",
+    교과: "사회정서학습", 대상: "교사용", 링크: "files/emotion-attendance-guide.pdf"
   },
   {
     분류: "앱", 제목: "직업예절 지키기",
@@ -188,6 +193,7 @@ const 분류설정 = {
   "앱":      { 색: "var(--app)",   버튼: "앱 열기" },
   "영상":    { 색: "var(--video)", 버튼: "영상 보기" },
   "학습자료": { 색: "var(--doc)",   버튼: "자료 보기" },
+  "활용자료": { 색: "var(--guide)", 버튼: "설명서 보기" },
   "연수자료": { 색: "var(--talk)",  버튼: "자료 보기" }
 };
 
